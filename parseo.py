@@ -58,7 +58,7 @@ def parsear_datos_ine(texto_completo):
             continue
 
         # Bloque NOMBRE
-        if fuzzy_similar(linea_may, "NOMBRE") > 0.6:
+        if fuzzy_similar(linea_may.upper(), "NOMBRE") > 0.6:
             posibles_nombres = []
             for j in range(i + 1, min(i + 8, len(lineas))):
                 l = lineas[j].strip()
@@ -79,7 +79,7 @@ def parsear_datos_ine(texto_completo):
             continue
 
         # Domicilio
-        if fuzzy_similar(linea_may, "DOMICILIO") > 0.6:
+        if fuzzy_similar(linea_may.upper(), "DOMICILIO") > 0.6:
             esperando_domicilio = True
             continue
         if esperando_domicilio:
@@ -90,7 +90,7 @@ def parsear_datos_ine(texto_completo):
                 continue
 
         # CURP
-        if fuzzy_similar(linea_may, "CURP") > 0.75:
+        if fuzzy_similar(linea_may.upper(), "CURP") > 0.75:
             partes = linea.split("CURP", 1)
             if len(partes) > 1 and partes[1].strip():
                 datos["curp"] = partes[1].strip().replace(":", "").replace(" ", "")
@@ -98,8 +98,6 @@ def parsear_datos_ine(texto_completo):
                 posible_curp = lineas[i + 1].strip().replace(" ", "").replace(":", "")
                 datos["curp"] = posible_curp
             continue
-
-        # Reemplaza tu sección de "Clave elector" con esto:
 
         # Clave de elector
         if re.search(r'CLAVE\s*DE\s*ELECTOR', linea_may):
@@ -109,7 +107,7 @@ def parsear_datos_ine(texto_completo):
                 datos["clave_elector"] = match.group(1)
                 continue
 
-            # Si no encuentra en la misma línea, buscar en la siguiente
+            # si la clave no esta en misma linea
             partes = re.split(r'CLAVE\s*DE\s*ELECTOR', linea_may, 1)
             if len(partes) > 1:
                 candidato = re.sub(r'[^A-Z0-9]', '', partes[1])

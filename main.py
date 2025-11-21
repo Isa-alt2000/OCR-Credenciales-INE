@@ -2,7 +2,7 @@ import json
 import datetime
 from extraccion import INEExtractor
 
-RUTA_IMG = "ine_2.jpg"
+RUTA_IMG = "ine_4.jpg"
 DEBUG = True
 FORZAR_PREPROCESAMIENTO = True
 
