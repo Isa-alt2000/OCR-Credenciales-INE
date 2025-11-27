@@ -20,7 +20,7 @@ class INEExtractor:
         if not activo:
             return ruta_imagen
 
-        img = cv2.imread(ruta_imagen)
+        img = cv2.imread(str(ruta_imagen))
         if img is None:
             raise ValueError(f"No se pudo leer la imagen en la ruta: {ruta_imagen}")
 
@@ -73,7 +73,7 @@ class INEExtractor:
 
     # debug
     def visualizar_detecciones(self, ruta_imagen):
-        img = cv2.imread(ruta_imagen)
+        img = cv2.imread(str(ruta_imagen))
         resultados = self.reader.readtext(img, detail=1)
 
         for (bbox, text, confidence) in resultados:
@@ -89,8 +89,8 @@ class INEExtractor:
                 cv2.putText(img, f"{text[:20]}",
                             (top_left[0], top_left[1] - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-
-        cv2.imwrite(self.output_dir / f'img_boxes_{self.nombre_base}.jpg', img)
+        ruta_salida = str(self.output_dir / f'img_boxes_{self.nombre_base}.jpg')
+        cv2.imwrite(ruta_salida, img)
         print("Imagen con cajas verdes de detecciones guardada")
 
     def procesar_ine(self, ruta_img, nombre_base, debug=False, forzar=False):
