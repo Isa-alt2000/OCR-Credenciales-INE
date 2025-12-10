@@ -1,36 +1,19 @@
-import json
-import datetime
-from extraccion import INEExtractor
+from preprocesamiento import alinear_ine_principal, extraer_regiones, REGIONES_INE
+from extraccion import aplicar_ocr_easyocr
+from parseo_json import guardar_json_con_fecha
 
-RUTA_IMG = "ine_4.jpg"
+RUTA_IMG = "ine_2.jpg"
 DEBUG = True
-FORZAR_PREPROCESAMIENTO = True
 
-nombre_base = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+referencia = "ine_referencia.jpg"
 
 
 def main():
-    ine = INEExtractor(nombre_base=nombre_base)
-
-    resultado_final, img_final = ine.procesar_ine(
-        RUTA_IMG,
-        nombre_base,
-        debug=DEBUG,
-        forzar=FORZAR_PREPROCESAMIENTO,
-        )
-
-    if DEBUG:
-        print(f'\nResultado final:\n{json.dumps(resultado_final, ensure_ascii=False, indent=4)}')
-        ine.visualizar_detecciones(img_final)
-
-
-def test_visualizar_detecciones():
-    nombre_base_test = "test_visualizar" + nombre_base
-    ine = INEExtractor(nombre_base=nombre_base_test)
-    ruta_img = "ine_4.jpg"
-    ine.visualizar_detecciones(ruta_img)
+    alineado = alinear_ine_principal(RUTA_IMG, referencia)
+    prepro = extraer_regiones(alineado, REGIONES_INE)   
+    resultados = aplicar_ocr_easyocr(prepro)
+    guardar_json_con_fecha(resultados)
 
 
 if __name__ == '__main__':
     main()
-    #test_visualizar_detecciones()
